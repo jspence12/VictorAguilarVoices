@@ -1,0 +1,36 @@
+﻿@model VictorMVC.Models.Login
+<div class="container">
+    <h3 class="display-4 text-white">@ViewBag.Title</h3>
+    <div id="alert" role="alert" style="display:none">
+
+    </div>
+
+    @using (Ajax.BeginForm("Login",
+            new AjaxOptions { OnBegin = "onBegin", OnSuccess = "onSuccess", OnFailure = "onFailure" }))
+    {
+        @Html.AntiForgeryToken();
+        <div class="form-group">
+            @Html.LabelFor(m => Model.Username)
+            @Html.TextBoxFor(m => Model.Username, new { @class = "form-control", @placeholder = "Username", @Required = true })
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(m => Model.Password)
+            @Html.TextBoxFor(m => Model.Password, new { @class = "form-control", @type = "Password", @placeholder = "Password", @Required = true })
+        </div>
+        <div class="row justify-content-center">
+            <input class="btn btn-dark col-8 mt-4" type="submit" value="Submit" style="margin-bottom: 27px;" />
+        </div>
+    }
+</div>
+<script>
+    function onBegin() { }
+    function onSuccess() {
+        location.href = "@Url.Action("Menu", "Admin")";
+    }
+    function onFailure(data) {
+        var elId = "#alert";
+        $(elId).attr("class", "alert alert-danger");
+        $(elId).text("Invalid Username or Password");
+        $(elId).show();
+    }
+</script>

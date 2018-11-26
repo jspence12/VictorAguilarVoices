@@ -1,0 +1,100 @@
+﻿@model VictorMVC.Models.Article
+@{
+    //reuse view for both create and update operations.
+    string method = (ViewBag.IsNew) ? "Create" : "Update";
+    string prefill;
+    if (Model?.Content == null)
+    {
+        prefill = "";
+    }
+    else
+    {
+        prefill = @Model.Content;
+    }
+}
+@section Styles {
+    @Styles.Render("~/content/bundles/css/summernote")
+}
+<div class="container">
+    <h3 class="display-4">@ViewBag.Title</h3>
+    <div id="alert" class="alert alert-danger" style="display:none"> </div>
+    @using (Ajax.BeginForm(method, "Articles", null,
+        new AjaxOptions { OnBegin = "formOnBegin", OnSuccess = "formOnSuccess", OnFailure = "customOnFailure", HttpMethod = "POST" }))
+    {
+        @Html.AntiForgeryToken()
+        if (!ViewBag.IsNew)
+        {
+            @Html.HiddenFor(m => Model.ID)
+        }
+        <input id="confirm" type="hidden" name="confirm" value="false" />
+        <div class="form-group">
+            @Html.LabelFor(m => Model.Title)
+            @Html.EditorFor(m => Model.Title, new { htmlAttributes = new { @class = "form-control", @placeholder = "Title", @Required = true } })
+            @Html.ValidationMessageFor(m => Model.Title)
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(m => Model.List_Order)
+            @Html.EditorFor(m => Model.List_Order, new { htmlAttributes = new { @class = "form-control", @Required = true, min = 1 } })
+            @Html.ValidationMessageFor(m => Model.List_Order)
+        </div>
+        <div class="row">
+            <div class="form-group col-6">
+                @Html.LabelFor(m => Model.Cols_md)
+                @Html.EditorFor(m => Model.Cols_md, new { htmlAttributes = new { @class = "form-control", @Required = true, min = 1, max = 12 } })
+                @Html.ValidationMessageFor(m => Model.Cols_md)
+            </div>
+            <div class="form-group col-6">
+                @Html.LabelFor(m => Model.Cols_lg)
+                @Html.EditorFor(m => Model.Cols_lg, new { htmlAttributes = new { @class = "form-control", @Required = true, min = 1, max = 12 } })
+                @Html.ValidationMessageFor(m => Model.Cols_lg)
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(m => Model.Content)
+            <textarea id="summernote" name="Content" required></textarea>
+            @Html.ValidationMessageFor(m => Model.Content)
+        </div>
+        <div class="row justify-content-center">
+            <input class="btn btn-dark col-8" type="submit" value="Submit" />
+        </div>
+    }
+    <div id="loader" class="col-12 justify-content-center text-center" style="display:none">
+        <p><b>Uploading Article Content</b></p>
+        <i class="fa fa-spinner fa-3x col-12 mb-3 mt-2 text-secondary"></i>
+    </div>
+</div>
+    @section Scripts {
+        @Scripts.Render("~/bundles/summernote")
+        @Scripts.Render("~/bundles/modify")
+        <script>
+        $('#summernote').summernote({
+            placeholder: "Write your article here",
+            tabsize: 2,
+            minHeight: 300,
+        });
+        var content = `@Html.Raw(@prefill)`;
+        if (content) {
+            $('.note-editable').html(content);               //remove pre-populated <p><br/></p>
+            $('#summernote').summernote('insertText', "");   //flag summernote about the pre-filled text
+        }
+        function customOnFailure(data)
+        {
+            if (data.responseJSON.StatusCode == 300)
+            {
+                var message = "In order to complete this operation, the following files will be overwritten Are you sure you wish to continue?"
+                data.responseJSON.Conflicts.forEach(function (conflict) {
+                    message += "\n   - " + conflict;
+                });
+                var isConfirmed = confirm(message);
+                if (isConfirmed) {
+                    $("#confirm").val("true");
+                    $(form).submit();
+                }
+            }
+            else
+            {
+                formOnFail(data);
+            }
+        }
+        </script>
+    }

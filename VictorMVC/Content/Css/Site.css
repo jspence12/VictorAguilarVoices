@@ -1,0 +1,143 @@
+/* Wrapping element */
+/* Set some basic padding to keep content from hitting the edges */
+
+/*Makes header display below navbar on id href*/
+
+a {
+    color: #62d7d0;
+}
+
+body {
+    font-family: 'Patua One';
+    background-image: url("/Content/Images/bg-pattern.png"),linear-gradient(to right,#dda624,#f7ba28);
+    background-repeat: repeat, repeat;
+}
+
+.body-content {
+    padding: 48px,15px,48px,15px;
+    margin-top: 84px !important;
+    margin-bottom: 27px;
+}
+
+/* Makes headers appear below navbar when linked to via id*/
+.body-header {
+    padding-top: 64px;
+    margin-top: -56px;
+}
+
+.btn {
+    border-radius:5rem;
+}
+
+/* Carousel */
+.carousel-caption p {
+    font-size: 20px;
+    line-height: 1.4;
+}
+
+/* Make .svg files in the carousel display properly in older browsers */
+.carousel-inner .item img[src$=".svg"] {
+    width: 100%;
+}
+
+.fa-spinner {
+    animation-name: spin;
+    animation-duration: 2300ms;
+    animation-iteration-count: infinite;
+    animation-timing-function: linear;
+    margin-bottom: 5px;
+}
+
+.jumbotron-fluid {
+    padding-top: 0;
+    overflow: hidden;
+    font-weight: 700;
+    -webkit-text-stroke-width: 1px;
+    -webkit-text-stroke-color: #474747;
+}
+
+.jumbotron img {
+    margin-top:56px;
+    width:100%;
+    height: auto;
+    position:center;
+}
+
+.note-editor {
+    color:black;
+}
+
+.nav-padding {
+    padding-top: 50px;
+}
+
+navbar-toggler,.nav-item {
+    -webkit-transition: background-color .15s ease-out;
+    -moz-transition: background-color .15s ease-out;
+    -o-transition: background-color .15s ease-out;
+    transition: background-color .15s ease-out;
+}
+.navbar-toggler:hover, .nav-item:hover {
+    background-color: #6ef2ea;
+}
+.navbar-brand {
+    -webkit-transition: font-size .15s ease-out;
+    -moz-transition: font-size .15s ease-out;
+    -o-transition: font-size .15s ease-out;
+    transition: font-size .15s ease-out;
+}
+.navbar-brand:hover {
+    font-size: 1.35rem;
+}
+/* responsive hover on font-awesome icons except for loader*/
+i.text-secondary:hover:not(.fa-spinner) {
+    color: #6ef2ea !important;
+}
+
+.rounded-corners {
+    border-radius:100px;
+}
+
+.top-half {
+    border-top-left-radius: 100px;
+    border-top-right-radius: 100px;
+}
+
+.bottom-half {
+    border-bottom-left-radius: 100px;
+    border-bottom-right-radius: 100px;
+}
+
+@font-face {
+    font-family: 'Patua One';
+    font-style: normal;
+    font-weight: 400;
+    src: local('Patua One'), local('PatuaOne-Regular'), url("/Content/Fonts/PatuaOne-Regular.ttf") format('woff2');
+    unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@keyframes spin {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* Hide/rearrange for smaller screens */
+@media screen and (max-width: 767px) {
+    /* Hide captions */
+    .carousel-caption {
+        display: none;
+    }
+    /*More-focussed image on smaller screens*/
+    .jumbotron img {
+        width:250%;
+        margin-left: -47%;
+        height: 50%;
+        min-height:300px;
+        position: center;
+    }
+}

@@ -1,0 +1,54 @@
+﻿@model VictorMVC.Models.SmtpHost
+@{string method = (ViewBag.IsNew) ? "Create" : "Update"; }
+<div class="container">
+    <h3 class="display-4">@ViewBag.Title</h3>
+    <div id="alert" class="alert alert-danger" role="alert" style="display:none"> </div>
+    @using (Ajax.BeginForm(method, "Smtp", null,
+new AjaxOptions { OnBegin = "formOnBegin", OnSuccess = "formOnSuccess", OnFailure = "formOnFail", HttpMethod = "POST" }))
+    {
+        @Html.AntiForgeryToken()
+        @Html.HiddenFor(m => m.ID)
+        <div class="row">
+            <div class="form-group col-12 col-md-8">
+                @Html.LabelFor(m => Model.Host)
+                @Html.EditorFor(m => Model.Host, new { htmlAttributes = new { @class = "form-control", @placeholder = "Host", @Required = true } })
+                @Html.ValidationMessageFor(m => Model.Host)
+            </div>
+            <div class="form-group col-12 col-md-4">
+                @Html.LabelFor(m => Model.Port)
+                @Html.EditorFor(m => Model.Port, new { htmlAttributes = new { @class = "form-control", @placeholder = "Port Number", @Required = true } })
+                @Html.ValidationMessageFor(m => Model.Port)
+            </div>
+            <div class="form-group col-12 col-md-6">
+                @Html.LabelFor(m => Model.username)
+                @Html.EditorFor(m => Model.username, new { htmlAttributes = new { @class = "form-control", @placeholder = "Username", @Required = false } })
+                @Html.ValidationMessageFor(m => Model.username)
+            </div>
+            <div class="form-group col-12 col-md-6">
+                @Html.LabelFor(m => Model.password)
+                @Html.EditorFor(m => Model.password, new { htmlAttributes = new { @class = "form-control", @type = "Password", @placeholder = "Password", @Required = false } })
+                @Html.ValidationMessageFor(m => Model.password)
+            </div>
+            <div class="form-group col-6">
+                @Html.LabelFor(m => Model.AuthenticationRequired)
+                @Html.EditorFor(m => Model.AuthenticationRequired)
+                @Html.ValidationMessageFor(m => Model.password)
+            </div>
+            <div class="form-group col-6">
+                @Html.LabelFor(m => Model.UseSSL)
+                @Html.EditorFor(m => Model.UseSSL)
+                @Html.ValidationMessageFor(m => Model.UseSSL)
+            </div>
+        </div>
+        <div class="row justify-content-center">
+            <input class="btn btn-dark col-8" type="submit" value="Submit" style="margin-bottom: 27px;" />
+        </div>
+    }
+    <div id="loader" class="col-12 justify-content-center" style="display:none">
+        <p class="text-center"><b>Uploading Email Recipient</b></p>
+        <i class="fa fa-spinner fa-3x col-12 text-center mb-3 mt-2 text-secondary"></i>
+    </div>
+</div>
+@section Scripts {
+    @Scripts.Render("~/bundles/modify")
+}

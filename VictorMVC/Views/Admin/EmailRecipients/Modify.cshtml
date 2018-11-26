@@ -1,0 +1,35 @@
+﻿@model VictorMVC.Models.EmailRecipient
+@{
+    //reuse view for both create and update operations.
+    string method = (ViewBag.IsNew) ? "Create" : "Update";
+}
+<div class="container">
+    <h3 class="display-4">@ViewBag.Title</h3>
+    <div id="alert" class="alert alert-danger" role="alert" style="display:none"> </div>
+    @using (Ajax.BeginForm(method, "EmailRecipients", null,
+        new AjaxOptions { OnBegin = "formOnBegin", OnSuccess = "formOnSuccess", OnFailure = "formOnFail", HttpMethod = "POST" }))
+    {
+        @Html.AntiForgeryToken()
+        if (!ViewBag.IsNew)
+        {
+            @Html.HiddenFor(m => Model.ID)
+        }
+        <div class="form-group">
+            @Html.LabelFor(m => Model.Email)
+            @Html.EditorFor(m => Model.Email, new { htmlAttributes = new { @class = "form-control", @placeholder = "Name@Domain.com", @Required = true } })
+            @Html.ValidationMessageFor(m => Model.Email)
+        </div>
+
+        <div class="row justify-content-center">
+            <input class="btn btn-dark col-8" type="submit" value="Submit" style="margin-bottom: 27px;" />
+        </div>
+    }
+    <div id="loader" class="col-12 justify-content-center" style="display:none">
+        <p class="text-center"><b>Uploading Email Recipient</b></p>
+        <i class="fa fa-spinner fa-3x col-12 text-center mb-3 mt-2 text-secondary"></i>
+    </div>
+</div>
+@section Scripts
+{
+    @Scripts.Render("~/bundles/modify")
+}

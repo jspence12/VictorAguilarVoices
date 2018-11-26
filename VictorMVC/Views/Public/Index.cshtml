@@ -1,0 +1,118 @@
+﻿@model VictorMVC.Models.EmailForm
+<div class="jumbotron jumbotron-fluid pb-0 mb-0 text-primary" style="z-index:3;">
+  <div class="row no-gutters justify-content-center justify-content-lg-end" style="margin-bottom:-50px;">
+    <div id="name" style="position:absolute; margin-top:2.5em; opacity:0;">
+      <h1 class="display-1 text-center mr-md-4 mb-md-0" style="font-weight:700;">Victor Aguilar</h1>
+      <h3 class="display-3 text-center mr-md-4" style="font-weight:700;">Voice Actor</h3>
+    </div>
+  </div>
+  <img id="heroimg" src="/Content/Images/hero-image-cropped.jpg" />
+</div>
+<div class="pt-3 m-0 bg-secondary" style="z-index:5; margin-top:-16px;"></div>
+<div class="container rounded-corners" style="margin-top:-2.5em; z-index:1; position:relative; background-color:#cc9920;">
+  <div class="row rounded-corners shadow">
+    <div class="col-12 col-md-6 col-lg-8 order-md-2">
+      <h3 id="about" class="display-4 body-header pl-md-2 text-center text-md-left">About</h3>
+      <div id="articleArea">
+        <i id="articleSpinner" class="fa fa-spinner fa-4x text-secondary text-center col-12"></i>
+      </div>
+    </div>
+    <div class="col-12 col-md-6 col-lg-4 bg-dark top-half order-md-1">
+      <h3 id="demos" class="display-4 body-header text-center">Demos</h3>
+      <div id="demoArea" class="py-3 px-1 mb-5">
+        <i id="demoSpinner" class="fa fa-spinner fa-4x text-secondary text-center col-12"></i>
+      </div>
+    </div>
+    <div class="col-12 col-md-6 col-lg-4 bg-dark bottom-half order-md-3">
+      <hr class="d-none d-md-block"/>
+      <div display="hidden" style="height:80px;"></div>
+      <div class="text-center "style="position:absolute;left:0;right:0;margin-left:auto;margin-right:auto; bottom:10px;">
+        <a href="https://www.instagram.com/victor.aguilar.vo/">
+          <i class="fa fa-instagram fa-5x text-secondary"></i>
+        </a>
+        <a href="https://twitter.com/VO_VicAguilar">
+          <i class="fa fa-twitter fa-5x text-secondary"></i>
+        </a>
+      </div>
+    </div>
+    <div class="col-12 col-md-6 col-lg-8 order-md-4">
+      <hr class="d-none d-md-block"/>
+      <h3 id="contact" class="anchor body-header display-4 pl-2 text-center text-md-left">Contact</h3>
+      <div id="alert" role="alert" style="display:none"></div>
+      @using (Ajax.BeginForm("Contact",
+      new AjaxOptions { OnSuccess = "onSuccess", OnFailure = "onFailure" }))
+      {
+        <div class="form-group">
+          <b>@Html.LabelFor(m => Model.Name)</b>
+          @Html.TextBoxFor(m => Model.Name, new { @class = "form-control", @placeholder = "Your Name", @Required = true })
+        </div>
+        <div class="form-group">
+          <b>@Html.LabelFor(m => Model.Email)</b>
+          @Html.TextBoxFor(m => Model.Email, new { @class = "form-control", @type = "email", @placeholder = "Name@Domain.com", @Required = true })
+        </div>
+        <div class="form-group">
+          <b>@Html.LabelFor(m => Model.Message)</b>
+          @Html.TextAreaFor(m => Model.Message, new { @class = "form-control", @rows = 12, @placeholder = "Write your message here.", @Required = true })
+        </div>
+        <div class="row justify-content-center mb-5">
+          <input class="btn btn-dark col-8 mb-1 center" type="submit" value="Send" />
+        </div>
+      }
+    </div>
+  </div>
+</div>
+@section Scripts {
+  <script>
+    $(".jumbotron").css("height", ($(".jumbotron").css("width") * 2 / 3));
+    $(document).ready(function () {
+      $(this).scrollTop(0);
+      $("#name").fadeTo(750, 1);
+    });
+    $.ajax({
+      url: "/../getContent",
+      type: "POST",
+    }).done(function (data) {
+      var contentArea = document.getElementById("articleArea");
+      data.articles.forEach(function (article) {
+        var element = document.createElement("div")
+        element.setAttribute("class", "col-12 col-md-" + article.Cols_md + " col-lg-" + article.Cols_lg);
+        element.innerHTML = article.Content;
+        contentArea.appendChild(element);
+      });
+      $("#articleSpinner").remove();
+      contentArea = document.getElementById("demoArea");
+      data.demos.forEach(function (demo) {
+        var listing = document.createElement("div");
+        var header = document.createElement("h5");
+        var audio = document.createElement("audio");
+        listing.setAttribute("class", "card bg-white text-dark p-1 pb-2 shadow rounded-corners row justify-content-center mx-1");
+        header.textContent = demo.Title;
+        header.setAttribute("class", "col-12 text-center");
+        audio.setAttribute("controls", "");
+        audio.setAttribute("src", "Content/Audio/" + demo.File);
+        audio.setAttribute("class", "col-12");
+        listing.appendChild(header);
+        listing.appendChild(audio);
+        contentArea.appendChild(listing);
+      });
+      $("#demoSpinner").remove();
+    });
+    $("window").bind("scroll", function()
+    {
+      var scrolled = $(window).scrollTop();
+      $('#heroimg').css('padding-top', Math.max(50,Math.min(-50,(0 - (scrolled * .15))) + 'px'));
+    });
+    function onSuccess() {
+      var elId = "#alert";
+      $(elId).attr("class", "alert alert-success");
+      $(elId).text("Your message has been sent.");
+      $(elId).show();
+    }
+    function onFailure() {
+      var elId = "#alert";
+      $(elId).attr("class", "alert alert-danger");
+      $(elId).text("Error sending message. Please try again");
+      $(elId).show();
+    }
+  </script>
+}

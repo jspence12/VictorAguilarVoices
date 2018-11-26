@@ -1,0 +1,42 @@
+﻿@model VictorMVC.Models.EmailRecipient
+<div class="container">
+    <h3 class="display-4">@ViewBag.Title</h3>
+    <div id="alert"></div>
+    <div class="row no-gutters">
+        <a href="~/Admin/EmailRecipients/Modify" class="btn btn-dark col-3 col-sm-2 col-lg-1 mb-3"><i class="fa fa-plus fa-sm"></i> Email</a>
+    </div>
+    <table class="table table-sm container table container">
+        <thead>
+            <tr class="row no-gutters justify-content-end">
+                <td scope="col" class="col-9 align-text-bottom">@Html.DisplayNameFor(m => m.Email)</td>
+                <td scope="col" class="col-3">Options</td>
+            </tr>
+        </thead>
+        @if (ViewBag.EmailRecipients.Length > 0)
+        {
+            foreach (VictorMVC.Models.EmailRecipient row in ViewBag.EmailRecipients)
+            {
+                <tr id="@row.ID" class="row no-gutters">
+                    <td class="Email col-9">@row.Email</td>
+                    <td class="row justify-content-center col-3">
+                        <a class="btn btn-dark col-12 col-md-5 m-1" href="~/Admin/EmailRecipients/Modify/@row.ID">Edit</a>
+                        <button class="btn btn-dark delete-button col-12 col-md-5 m-1">Delete</button>
+                    </td>
+                </tr>
+            }
+        }
+        else
+        {
+            <tr>
+                <td colspan="2">No Email Recipients Stored in database</td>
+            </tr>
+        }
+    </table>
+</div>
+@section Scripts {
+    <script>
+        var deletionClass = ".Email";
+        var providedUrl = "/../Admin/EmailRecipients/Delete/";
+    </script>
+    @Scripts.Render(@"~/bundles/manage")
+}

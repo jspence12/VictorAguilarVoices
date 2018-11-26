@@ -1,0 +1,48 @@
+﻿@model VictorMVC.Models.Article
+<div class="container">
+    <h3 class="display-4">@ViewBag.Title</h3>
+    <div id="alert"></div>
+    <div class="row no-gutters">
+        <a href="~/Admin/Articles/Modify" class="btn btn-dark col-3 col-sm-2 col-lg-1 mb-3"><i class="fa fa-plus fa-sm"></i> Article</a>
+    </div>
+    <table class="table table-sm container table container">
+        <thead>
+            <tr class="row no-gutters justify-content-end">
+                <td scope="col" class="col-3 align-text-bottom">@Html.DisplayNameFor(m => m.Title)</td>
+                <td scope="col" class="col-2 align-text-bottom">@Html.DisplayNameFor(m => m.List_Order)</td>
+                <td scope="col" class="col-2">@Html.DisplayNameFor(m => m.Cols_md)</td>
+                <td scope="col" class="col-2">@Html.DisplayNameFor(m => m.Cols_lg)</td>
+                <td scope="col" class="col-3">Options</td>
+            </tr>
+        </thead>
+        @if (ViewBag.Articles.Length > 0)
+        {
+            foreach (VictorMVC.Models.Article row in ViewBag.Articles)
+            {
+                <tr id="@row.ID" class="row no-gutters">
+                    <td class="Title col-3 pr-2">@row.Title</td>
+                    <td class="List_Order col-2">@row.List_Order</td>
+                    <td class="File col-2 pr-4">@row.Cols_md</td>
+                    <td class="File col-2 pr-4">@row.Cols_lg</td>
+                    <td class="row justify-content-center col-3">
+                        <a class="btn btn-dark col-12 col-md-5 m-1" href="~/Admin/Articles/Modify/@row.ID">Edit</a>
+                        <button class="btn btn-dark delete-button col-12 col-md-5 m-1">Delete</button>
+                    </td>
+                </tr>
+            }
+        }
+        else
+        {
+            <tr>
+                <td colspan="5">No Articles Stored in database</td>
+            </tr>
+        }
+    </table>
+</div>
+    @section Scripts {
+        <script>
+            var deletionClass = ".Title";
+            var providedUrl = "/../Admin/Articles/Delete/"
+        </script>
+        @Scripts.Render("~/bundles/manage")
+    }
